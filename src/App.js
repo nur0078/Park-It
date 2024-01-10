@@ -95,8 +95,8 @@ function App() {
           mapContainerStyle={{ width: "100%", height: "100%" }}
           options={{
             zoomControl: false,
-            streetViewControl: false,
-            mapTypeControl: false,
+            // streetViewControl: false,
+            // mapTypeControl: false,
             fullscreenControl: false,
           }}
           onLoad={(map) => setMap(map)}
