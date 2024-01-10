@@ -19,17 +19,17 @@ import {
   Autocomplete,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 // Default Marker Position
 const center = { lat: -33.8568, lng: 151.2153 };
 
 function App() {
-  // PAGE TITLE
+  // // PAGE TITLE
 
-  useEffect(() => {
-    document.title = "PARK IT";
-  }, []);
+  // useEffect(() => {
+  //   document.title = "PARK IT";
+  // }, []);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -56,7 +56,6 @@ function App() {
     if (originRef.current.value === "" || destinationRef.current.value === "") {
       return;
     }
-
     // eslint-disable-next-line no-undef
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
@@ -155,12 +154,15 @@ function App() {
         </HStack>
         <HStack spacing={4} mt={4} justifyContent="space-between">
           <Text>Distance: {distance} </Text>
-          <Text zIndex="modal">Duration: {duration} </Text>
+          <Text>Duration: {duration} </Text>
           <IconButton
             aria-label="center back"
             icon={<FaLocationArrow />}
             isRound
-            onClick={() => map.panTo(center)}
+            onClick={() => {
+              map.panTo(center);
+              map.setZoom(15);
+            }}
           />
         </HStack>
       </Box>
