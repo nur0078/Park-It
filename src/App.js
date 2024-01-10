@@ -11,14 +11,23 @@ import {
 } from "@chakra-ui/react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
 
-import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
+import {
+  useJsApiLoader,
+  GoogleMap,
+  Marker,
+  Autocomplete,
+} from "@react-google-maps/api";
+import { useState } from "react";
 
 const center = { lat: -33.8568, lng: 151.2153 };
 
 function App() {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
   });
+
+  const [map, setMap] = useState(/** @type google.maps.Map */ (null));
 
   if (!isLoaded) {
     return <SkeletonText />;
@@ -44,8 +53,10 @@ function App() {
             mapTypeControl: false,
             fullscreenControl: false,
           }}
+          onLoad={(map) => setMap(map)}
         >
           <Marker position={center} />
+
           {/* Displaying markers, or directions */}
         </GoogleMap>
       </Box>
@@ -57,11 +68,17 @@ function App() {
         bgColor="white"
         shadow="base"
         minW="container.md"
-        zIndex="modal"
+        zIndex="docked"
       >
         <HStack spacing={4}>
-          <Input type="text" placeholder="Origin" />
-          <Input type="text" placeholder="Destination" />
+          <Autocomplete>
+            <Input type="text" placeholder="From" />
+          </Autocomplete>
+
+          <Autocomplete>
+            <Input type="text" placeholder="To" />
+          </Autocomplete>
+
           <ButtonGroup>
             <Button colorScheme="pink" type="submit">
               Calculate Route
@@ -80,7 +97,7 @@ function App() {
             aria-label="center back"
             icon={<FaLocationArrow />}
             isRound
-            onClick={() => alert(123)}
+            onClick={() => map.panTo(center)}
           />
         </HStack>
       </Box>
