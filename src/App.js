@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   ButtonGroup,
@@ -70,6 +71,18 @@ function App() {
         minW="container.md"
         zIndex="docked"
       >
+        <Box
+          color="gray.800"
+          fontWeight="bold"
+          letterSpacing="wide"
+          fontSize="xl"
+          textTransform="uppercase"
+          textAlign="center"
+          margin="3"
+        >
+          PARK IT
+        </Box>
+
         <HStack spacing={4}>
           <Autocomplete>
             <Input type="text" placeholder="From" />
