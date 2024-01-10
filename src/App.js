@@ -17,12 +17,20 @@ import {
   GoogleMap,
   Marker,
   Autocomplete,
+  DirectionsRenderer,
 } from "@react-google-maps/api";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+// Default Marker Position
 const center = { lat: -33.8568, lng: 151.2153 };
 
 function App() {
+  // PAGE TITLE
+
+  useEffect(() => {
+    document.title = "PARK IT";
+  }, []);
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
@@ -30,8 +38,45 @@ function App() {
 
   const [map, setMap] = useState(/** @type google.maps.Map */ (null));
 
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+
+  /** @type React.MutableRefObject<HTMLInputElement> */
+  const originRef = useRef();
+
+  /** @type React.MutableRefObject<HTMLInputElement> */
+  const destinationRef = useRef();
+
   if (!isLoaded) {
     return <SkeletonText />;
+  }
+
+  async function calculateRoute() {
+    if (originRef.current.value === "" || destinationRef.current.value === "") {
+      return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const directionsService = new google.maps.DirectionsService();
+    const results = await directionsService.route({
+      origin: originRef.current.value,
+      destination: destinationRef.current.value,
+
+      // eslint-disable-next-line no-undef
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+    setDirectionsResponse(results);
+    setDistance(results.routes[0].legs[0].distance.text);
+    setDuration(results.routes[0].legs[0].duration.text);
+  }
+
+  function clearRoute() {
+    setDirectionsResponse(null);
+    setDistance("");
+    setDuration("");
+    originRef.current.value = "";
+    destinationRef.current.value = "";
   }
 
   return (
@@ -44,6 +89,7 @@ function App() {
     >
       <Box position="absolute" left={0} top={0} h="100%" w="100%">
         {/* Google Map Box */}
+
         <GoogleMap
           center={center}
           zoom={15}
@@ -59,6 +105,10 @@ function App() {
           <Marker position={center} />
 
           {/* Displaying markers, or directions */}
+
+          {directionsResponse && (
+            <DirectionsRenderer directions={directionsResponse} />
+          )}
         </GoogleMap>
       </Box>
 
@@ -71,8 +121,8 @@ function App() {
         minW="container.md"
         zIndex="docked"
       >
-        <Box
-          color="gray.800"
+        {/* <Text
+          color="black"
           fontWeight="bold"
           letterSpacing="wide"
           fontSize="xl"
@@ -81,31 +131,31 @@ function App() {
           margin="3"
         >
           PARK IT
-        </Box>
+        </Text> */}
 
         <HStack spacing={4}>
           <Autocomplete>
-            <Input type="text" placeholder="From" />
+            <Input type="text" placeholder="From" ref={originRef} />
           </Autocomplete>
 
           <Autocomplete>
-            <Input type="text" placeholder="To" />
+            <Input type="text" placeholder="To" ref={destinationRef} />
           </Autocomplete>
 
           <ButtonGroup>
-            <Button colorScheme="pink" type="submit">
+            <Button colorScheme="pink" type="submit" onClick={calculateRoute}>
               Calculate Route
             </Button>
             <IconButton
               aria-label="center back"
               icon={<FaTimes />}
-              onClick={() => alert(123)}
+              onClick={clearRoute}
             />
           </ButtonGroup>
         </HStack>
         <HStack spacing={4} mt={4} justifyContent="space-between">
-          <Text>Distance: </Text>
-          <Text>Duration: </Text>
+          <Text>Distance: {distance} </Text>
+          <Text zIndex="modal">Duration: {duration} </Text>
           <IconButton
             aria-label="center back"
             icon={<FaLocationArrow />}
