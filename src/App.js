@@ -25,6 +25,9 @@ import { useEffect, useRef, useState } from "react";
 const center = { lat: -33.8568, lng: 151.2153 };
 
 function App() {
+  // Code to select the destination (originRef) and finding a spot nearby such that a spot can be found.
+  // SO, Spot Matcher, ParkingFinderInTheSpot, DirectionToTheParkingSpot
+  // the direction shows upto parking matcher given that there's a spot available
   // PAGE TITLE
 
   useEffect(() => {
