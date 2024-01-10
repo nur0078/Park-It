@@ -19,17 +19,17 @@ import {
   Autocomplete,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Default Marker Position
 const center = { lat: -33.8568, lng: 151.2153 };
 
 function App() {
-  // // PAGE TITLE
+  // PAGE TITLE
 
-  // useEffect(() => {
-  //   document.title = "PARK IT";
-  // }, []);
+  useEffect(() => {
+    document.title = "PARK IT";
+  }, []);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -120,7 +120,7 @@ function App() {
         minW="container.md"
         zIndex="docked"
       >
-        {/* <Text
+        <Text
           color="black"
           fontWeight="bold"
           letterSpacing="wide"
@@ -130,7 +130,7 @@ function App() {
           margin="3"
         >
           PARK IT
-        </Text> */}
+        </Text>
 
         <HStack spacing={4}>
           <Autocomplete>
