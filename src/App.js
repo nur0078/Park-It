@@ -11,9 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
 
-import { useJsApiLoader, GoogleMap } from "@react-google-maps/api";
+import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 
-const center = { lat: -33.85672, lng: 151.21544 };
+const center = { lat: -33.8568, lng: 151.2153 };
 
 function App() {
   const { isLoaded } = useJsApiLoader({
@@ -38,7 +38,14 @@ function App() {
           center={center}
           zoom={15}
           mapContainerStyle={{ width: "100%", height: "100%" }}
+          options={{
+            zoomControl: false,
+            streetViewControl: false,
+            mapTypeControl: false,
+            fullscreenControl: false,
+          }}
         >
+          <Marker position={center} />
           {/* Displaying markers, or directions */}
         </GoogleMap>
       </Box>
